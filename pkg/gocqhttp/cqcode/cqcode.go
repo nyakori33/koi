@@ -35,7 +35,7 @@ func Check(code string) bool {
 }
 
 // 编码CQcode
-func Encode(function string, data map[string]interface{}) string {
+func Encode(function string, data map[string]any) string {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("[")
@@ -96,7 +96,7 @@ func Decode(code string) (function string, data map[string]string) {
 
 // 表情
 func Face(id int) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"id": id,
 	}
 
@@ -107,7 +107,7 @@ func Face(id int) string {
 //
 // * 可选参数: file, url, magic
 func Record(file, url string, magic bool) string {
-	data := make(map[string]interface{})
+	data := make(map[string]any)
 
 	if file != "" {
 		data["file"] = file
@@ -128,7 +128,7 @@ func Record(file, url string, magic bool) string {
 //
 // * 可选参数: cover
 func Video(file, cover string) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"file": file,
 	}
 
@@ -142,9 +142,9 @@ func Video(file, cover string) string {
 // @某人
 //
 // * 可选参数: name
-func At(uid int64, name string) string {
-	data := map[string]interface{}{
-		"qq": uid,
+func At(user_id uint, name string) string {
+	data := map[string]any{
+		"qq": user_id,
 	}
 
 	if name != "" {
@@ -168,7 +168,7 @@ func Mora() string {
 //
 // * 可选参数: content, image
 func LinkShare(url, title, content, image string) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"url":   url,
 		"title": title,
 	}
@@ -191,8 +191,8 @@ func LinkShare(url, title, content, image string) string {
 // 音乐分享
 //
 // * platform = qq/163/xm
-func MusicShare(platform string, id int64) string {
-	data := map[string]interface{}{
+func MusicShare(platform string, id int) string {
+	data := map[string]any{
 		"type": platform,
 		"id":   id,
 	}
@@ -204,7 +204,7 @@ func MusicShare(platform string, id int64) string {
 //
 // * 可选参数: content, image
 func MusicShareCustom(url, audio, title, content, image string) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"type":  "custom",
 		"url":   url,
 		"audio": audio,
@@ -226,7 +226,7 @@ func MusicShareCustom(url, audio, title, content, image string) string {
 //
 // * 可选参数: file, url
 func Image(file, url string, flash bool) string {
-	data := make(map[string]interface{})
+	data := make(map[string]any)
 
 	if file != "" {
 		data["file"] = file
@@ -247,7 +247,7 @@ func Image(file, url string, flash bool) string {
 //
 // * 可选参数: file, url
 func ShowImage(file, url string, id int) string {
-	data := make(map[string]interface{})
+	data := make(map[string]any)
 
 	if file != "" {
 		data["file"] = file
@@ -269,7 +269,7 @@ func ShowImage(file, url string, id int) string {
 
 // 回复
 func Reply(message_id int) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"id": message_id,
 	}
 
@@ -277,8 +277,8 @@ func Reply(message_id int) string {
 }
 
 // 自定义回复
-func ReplyCustom(text string, uid, seq, time int64) string {
-	data := map[string]interface{}{
+func ReplyCustom(text string, uid, seq, time uint) string {
+	data := map[string]any{
 		"text": text,
 		"qq":   uid,
 		"seq":  seq,
@@ -289,9 +289,9 @@ func ReplyCustom(text string, uid, seq, time int64) string {
 }
 
 // 戳一戳
-func Poke(uid int64) string {
-	data := map[string]interface{}{
-		"qq": uid,
+func Poke(user_id uint) string {
+	data := map[string]any{
+		"qq": user_id,
 	}
 
 	return Encode("poke", data)
@@ -299,7 +299,7 @@ func Poke(uid int64) string {
 
 // XML消息
 func XML(code string) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"data": code,
 	}
 
@@ -313,7 +313,7 @@ func JSON(json string) string {
 	json = strings.ReplaceAll(json, "[", "&#91;")
 	json = strings.ReplaceAll(json, "]", "&#93;`")
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"data": json,
 	}
 
@@ -323,8 +323,8 @@ func JSON(json string) string {
 // CardImage
 //
 // * 可选参数: source, icon, minwidth, minheight, maxwidth, maxheight
-func CardImage(file, source, icon string, minwidth, minheight, maxwidth, maxheight int) string {
-	data := map[string]interface{}{
+func CardImage(file, source, icon string, minwidth, minheight, maxwidth, maxheight uint) string {
+	data := map[string]any{
 		"file": file,
 	}
 
@@ -357,7 +357,7 @@ func CardImage(file, source, icon string, minwidth, minheight, maxwidth, maxheig
 
 // 文本转语音
 func TTS(text string) string {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"text": text,
 	}
 

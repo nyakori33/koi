@@ -44,6 +44,11 @@ func (message ws_data) do(ws *websocket.Conn) ([]byte, error) {
 	return json.Marshal(data.Body)
 }
 
+// 消息ID
+type msg_id struct {
+	ID int `json:"message_id"`
+}
+
 // 发送私聊消息
 func SendPrivateMessage(ws *websocket.Conn, user_id uint, text string) (message_id int, err error) {
 	return SendTemporaryMessage(ws, user_id, 0, text)
@@ -52,11 +57,6 @@ func SendPrivateMessage(ws *websocket.Conn, user_id uint, text string) (message_
 // 发送群消息
 func SendGroupMessage(ws *websocket.Conn, group_id uint, text string) (message_id int, err error) {
 	return SendTemporaryMessage(ws, 0, group_id, text)
-}
-
-// 消息ID
-type msg_id struct {
-	ID int `json:"message_id"`
 }
 
 // 发送临时会话消息
