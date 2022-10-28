@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"koi/pkg/gocqhttp"
+	"koi/pkg/gocqhttp/cqcode"
 	"koi/pkg/gocqhttp/event"
 	"koi/pkg/log"
 
@@ -153,7 +154,7 @@ func notice(ws_api *websocket.Conn, data []byte, event map[string]any) {
 		HandlerFriendAdd(ws_api, data)
 	case "friend_recall":
 		HandlerFriendRecall(ws_api, data)
-	case "notify":
+	case "notice":
 		types = event["sub_type"].(string)
 		notify(ws_api, types, data)
 	case "essence":
@@ -275,7 +276,25 @@ func HandlerFriendRecall(ws_api *websocket.Conn, data []byte) {}
 // * 通知事件
 //
 // 戳一戳
-func HandlerPoke(ws_api *websocket.Conn, data []byte) {}
+func HandlerPoke(ws_api *websocket.Conn, data []byte) {
+	var poke *event.Poke
+
+	err := json.Unmarshal(data, &poke)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Info(poke.SenderID, "戳了戳", poke.TargetID)
+
+	if poke.SenderID == poke.SelfID {
+		return
+	}
+
+	if poke.TargetID == poke.SelfID {
+		SendMessage(ws_api, poke.SenderID, poke.GroupID, cqcode.Poke(poke.SenderID))
+		log.Info(poke.TargetID, "戳了戳", poke.SenderID)
+	}
+}
 
 // * 通知事件
 //
@@ -301,3 +320,11 @@ func HandlerOfflineFile(ws_api *websocket.Conn, data []byte) {}
 //
 // 其他客户端在线状态变更
 func HandlerClientStatus(ws_api *websocket.Conn, data []byte) {}
+
+func SendMessage(ws_api *websocket.Conn, user_id, group_id uint, text string) (message_id int, err error) {
+	if group_id == 0 {
+		return gocqhttp.SendPrivateMessage(ws_api, user_id, text)
+	} else {
+		return gocqhttp.SendGroupMessage(ws_api, group_id, text)
+	}
+}
